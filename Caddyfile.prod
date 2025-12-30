@@ -1,0 +1,25 @@
+# Caddyfile.prod
+{$DOMAIN} {
+
+	# Reverse proxy to the internal app container
+	reverse_proxy api:3000
+
+	# Security headers (basic)
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Permissions-Policy "geolocation=(), microphone=(), camera=()"
+	}
+
+	# Reasonable request limits (helps blunt trivial abuse)
+	request_body {
+		max_size 64KB
+	}
+
+	# Access logging to stdout (good for Docker)
+	log {
+		format console
+	}
+}
