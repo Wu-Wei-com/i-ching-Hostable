@@ -4,13 +4,24 @@
 	# Reverse proxy to the internal app container
 	reverse_proxy api:3000
 
+	# Handle CORS preflight requests
+	  @preflight method OPTIONS
+	  respond @preflight 204
+
+
 	# Security headers (basic)
 	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-		X-Content-Type-Options "nosniff"
-		X-Frame-Options "DENY"
-		Referrer-Policy "no-referrer"
-		Permissions-Policy "geolocation=(), microphone=(), camera=()"
+			Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+			X-Content-Type-Options "nosniff"
+			X-Frame-Options "DENY"
+			Referrer-Policy "no-referrer"
+			Permissions-Policy "geolocation=(), microphone=(), camera=()"
+			Access-Control-Allow-Origin "*"
+			Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+			Access-Control-Allow-Headers "Content-Type, Authorization, X-Api-Key"
+			Access-Control-Max-Age "86400"
+			# Optional: if you want clients to read custom headers you return:
+			# Access-Control-Expose-Headers "Content-Length"
 	}
 
 	# Reasonable request limits (helps blunt trivial abuse)
